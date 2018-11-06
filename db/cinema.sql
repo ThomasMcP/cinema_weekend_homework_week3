@@ -12,12 +12,12 @@ CREATE TABLE customers (
 
 CREATE TABLE films (
   id SERIAL8 PRIMARY KEY,
-  title VARCHAR(255),
+  title VARCHAR(255) NOT NULL,
   price INT4
 );
 
 CREATE TABLE tickets (
   id SERIAL8 PRIMARY KEY,
   customer_id INT4 REFERENCES customers(id) ON DELETE CASCADE,
-  films_id INT4 REFERENCES films(id) ON DELETE CASCADE
+  film_id INT4 REFERENCES films(id) ON DELETE CASCADE
 );

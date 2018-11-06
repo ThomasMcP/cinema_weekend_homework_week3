@@ -13,7 +13,7 @@ class Film
 
   def save()
     sql = "INSERT INTO films (title, price) VALUES ($1, $2) RETURNING id;"
-    values = [@tite, @price]
+    values = [@title, @price]
     customer = SqlRunner.run(sql, values).first
     @id = customer['id'].to_i
   end
@@ -38,6 +38,17 @@ class Film
     SqlRunner.run(sql, values)
   end
 
+  def customers_that_have_seen_film()
+    sql = "SELECT customers.* FROM customers INNER JOIN tickets ON customers.id = tickets.customer_id WHERE film_id = $1"
+    values = [@id]
+    customer_data = SqlRunner.run(sql, values)
+    return customer_data.map { |customer| Customer.new(customer)}
+  end
+
+  def customers_watching_film
+    number_of_customers = customers_that_have_seen_film
+    return number_of_customers.length
+  end
 
 
 end

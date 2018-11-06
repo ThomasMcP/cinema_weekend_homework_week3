@@ -38,12 +38,29 @@ attr_reader :id
     SqlRunner.run(sql, values)
   end
 
-  def films()
-  sql = "SELECT films.* FROM films INNER JOIN tickets ON films.id = tickets.film_id WHERE customer_id = $1"
-  values = [@id]
-  film_data = SqlRunner.run(sql, values)
-  return Film.map { |film| Film.new(film)}
-end
+  def films_customer_has_seen()
+    sql = "SELECT films.* FROM films INNER JOIN tickets ON films.id = tickets.film_id WHERE customer_id = $1"
+    values = [@id]
+    film_data = SqlRunner.run(sql, values)
+    return film_data.map { |film| Film.new(film)}
+  end
+
+  def customer_buys_ticket
+    customer_films = self.films_customer_has_seen
+    film_prices = customer_films.map { |films| films.price }
+    combined_prices = film_prices.sum
+    return @funds - combined_prices
+  end
+
+  def tickets_bought_by_customer()
+    sql = "SELECT tickets.* FROM tickets LEFT JOIN customers ON customers.id = tickets.customer_id WHERE customer_id = $1;"
+    values = [@id]
+    tickets = SqlRunner.run(sql, values)
+    tickets_map = tickets.map { | ticket | Ticket.new(ticket)}
+    return tickets_map.length
+  end
+
+
 
 
 

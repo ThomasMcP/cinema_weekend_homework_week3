@@ -1,6 +1,6 @@
 require_relative('../db/sql_runner.rb')
 
-class Customer
+class Ticket
 
 
 attr_reader :id, :customer_id, :film_id
@@ -37,6 +37,8 @@ attr_reader :id, :customer_id, :film_id
     values = []
     SqlRunner.run(sql, values)
   end
+
+  
 
 
 
